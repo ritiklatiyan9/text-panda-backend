@@ -23,7 +23,15 @@ export function createApp() {
   app.set("trust proxy", 1);
 
   app.use(express.json({ limit: "128kb" }));
-  app.use(cors({ origin: config.corsOrigin }));
+  app.use(
+    cors({
+      origin: (origin, callback) => {
+        if (!origin || config.corsOrigin.includes(origin)) return callback(null, true);
+        return callback(new Error("CORS origin denied"));
+      },
+      credentials: true,
+    })
+  );
   app.use(morgan("dev"));
 
   app.use("/api/health", healthRouter);

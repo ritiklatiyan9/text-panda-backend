@@ -25,7 +25,9 @@ const int = (v, fallback) => {
 
 export const config = {
   port: int(process.env.PORT, 3001),
-  corsOrigin: process.env.CORS_ORIGIN || "http://localhost:5173",
+  corsOrigin: process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(",").map((origin) => origin.trim()).filter(Boolean)
+    : ["http://localhost:5173", "https://text-panda-frontend.vercel.app"],
 
   auth: {
     // Used to sign dashboard session JWTs. Override in production via JWT_SECRET.
